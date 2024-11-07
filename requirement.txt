@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+nest-asyncio
+torch
+Pillow
+torchvision
+python-dotenv
