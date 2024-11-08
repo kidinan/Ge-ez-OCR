@@ -10,7 +10,7 @@ from fastapi import UploadFile
 load_dotenv()
 s3_bucket_name = os.getenv('S3_BUCKET_NAME')
 s3_model_path = os.getenv('S3_MODEL_PATH')
-local_model_path = '/tmp/yolo_model.pt'  # Temporary path to save the model
+local_model_path = 'models/yolo_model.pt'  # Temporary path to save the model
 
 def download_model_from_s3():
     s3 = boto3.client('s3')
