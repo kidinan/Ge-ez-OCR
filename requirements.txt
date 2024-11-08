@@ -5,4 +5,3 @@ torch
 Pillow
 torchvision
 python-dotenv
-boto3
