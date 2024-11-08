@@ -1,10 +1,8 @@
-import os
 import torch
-from dotenv import load_dotenv
+import os
 
 def load_yolo_model():
     # Load environment variables
-    load_dotenv()
     yolo_model_path = os.getenv('YOLO_MODEL_PATH')
 
     if not yolo_model_path:
@@ -14,6 +12,14 @@ def load_yolo_model():
     
     print(f"Loading YOLO model from {yolo_model_path}")
 
-    # Load YOLO model from local file
-    yolo_model = torch.load(yolo_model_path, map_location=torch.device('cpu'))
+    # Custom unpickler to handle the 'models' module
+    class CustomUnpickler(torch.serialization.Unpickler):
+        def find_class(self, module, name):
+            if module == 'models':
+                module = 'app.models'
+            return super().find_class(module, name)
+
+    with open(yolo_model_path, 'rb') as f:
+        yolo_model = CustomUnpickler(f).load()
+    
     return yolo_model
