@@ -1,34 +1,10 @@
-import os
 import torch
-import torchvision.transforms as transforms
-from dotenv import load_dotenv
-from app.models.ocr_model import OCRModel
+from app.models.ocr_model import load_ocr_model, transform, decode_predictions, idx_to_char
 
-# Load environment variables
-load_dotenv()
-ocr_model_path = os.getenv('OCR_MODEL_PATH')
-
-# Initialize OCR model
-ocr_model = OCRModel(num_classes=your_num_classes)
-ocr_model.load_state_dict(torch.load(ocr_model_path, map_location=torch.device('cpu')))
-ocr_model.eval()
-
-# Define transforms
-transform = transforms.Compose([
-    transforms.Grayscale(num_output_channels=1),
-    transforms.Resize((32, 128)),
-    transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
-])
-
-# Decode predictions
-def decode_predictions(preds, idx_to_char):
-    preds = preds.argmax(2)
-    pred_strings = []
-    for pred in preds:
-        pred_string = ''.join([idx_to_char[idx.item()] for idx in pred if idx.item() != 0])
-        pred_strings.append(pred_string)
-    return pred_strings
+# Load OCR model
+ocr_model_path = 'models/ocr_model.pth'
+num_classes = len(idx_to_char)  # Number of classes for Geez characters
+ocr_model = load_ocr_model(ocr_model_path, num_classes)
 
 async def recognize_text(results, boxes, image, idx_to_char):
     lines = [image.crop((int(box[0]), int(box[1]), int(box[2]), int(box[3]))) for box in boxes]

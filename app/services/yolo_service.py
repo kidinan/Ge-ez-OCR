@@ -1,15 +1,11 @@
-import os
 import torch
 from PIL import Image
 from io import BytesIO
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-yolo_model_path = os.getenv('YOLO_MODEL_PATH')
+from fastapi import UploadFile
+from app.models.yolo_model import load_yolo_model
 
 # Load YOLO model
-yolo_model = torch.hub.load('ultralytics/yolov5', 'custom', path=yolo_model_path)
+yolo_model = load_yolo_model()
 
 async def predict(file: UploadFile):
     contents = await file.read()
