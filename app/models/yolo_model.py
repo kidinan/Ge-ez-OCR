@@ -1,6 +1,6 @@
 import torch
 import os
-import pickle
+from app.models.yolo import YOLOModel  # Adjust this import to match your model location
 
 def load_yolo_model():
     # Load environment variables
@@ -13,21 +13,9 @@ def load_yolo_model():
     
     print(f"Loading YOLO model from {yolo_model_path}")
 
-    # Custom unpickler to handle the 'models' module and persistent load
-    class CustomUnpickler(pickle.Unpickler):
-        def find_class(self, module, name):
-            if module == 'models':
-                module = 'app.models'
-            return super().find_class(module, name)
-        
-        def persistent_load(self, pid):
-            if isinstance(pid, tuple):
-                return pid
-            if isinstance(pid, bytes):
-                return pid.decode('utf-8')
-            return pid
-
-    with open(yolo_model_path, 'rb') as f:
-        yolo_model = CustomUnpickler(f).load()
+    # Initialize model
+    model = YOLOModel()
+    # Load model state_dict
+    model.load_state_dict(torch.load(yolo_model_path, map_location=torch.device('cpu')))
     
-    return yolo_model
+    return model
