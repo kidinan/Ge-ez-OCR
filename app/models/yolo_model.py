@@ -21,9 +21,11 @@ def load_yolo_model():
             return super().find_class(module, name)
         
         def persistent_load(self, pid):
-            if isinstance(pid, tuple) and len(pid) == 2 and pid[0] == 'persistent' and isinstance(pid[1], str):
-                return pid[1]
-            raise pickle.UnpicklingError("Unsupported persistent id encountered: {}".format(pid))
+            if isinstance(pid, tuple):
+                return pid
+            if isinstance(pid, bytes):
+                return pid.decode('utf-8')
+            return pid
 
     with open(yolo_model_path, 'rb') as f:
         yolo_model = CustomUnpickler(f).load()
