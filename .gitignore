@@ -5,9 +5,3 @@ __pycache__/
 
 # Environment variables
 .env
-
-# Ignore model files
-app/models/yolo_model.py
-app/models/ocr_model.py
-models/ocr_model.pth
-models/yolo_model.pt
