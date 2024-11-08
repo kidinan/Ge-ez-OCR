@@ -13,12 +13,16 @@ def load_yolo_model():
     
     print(f"Loading YOLO model from {yolo_model_path}")
 
-    # Custom unpickler to handle the 'models' module
+    # Custom unpickler to handle the 'models' module and persistent load
     class CustomUnpickler(pickle.Unpickler):
         def find_class(self, module, name):
             if module == 'models':
                 module = 'app.models'
             return super().find_class(module, name)
+        
+        def persistent_load(self, pid):
+            # Implement the function to handle persistent IDs
+            raise pickle.UnpicklingError("Persistent ID not supported: {}".format(pid))
 
     with open(yolo_model_path, 'rb') as f:
         yolo_model = CustomUnpickler(f).load()
