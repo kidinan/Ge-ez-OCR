@@ -1,6 +1,5 @@
 import torch
 import os
-from app.models.yolo import YOLOModel  # Adjust this import to match your model location
 
 def load_yolo_model():
     # Load environment variables
@@ -13,9 +12,7 @@ def load_yolo_model():
     
     print(f"Loading YOLO model from {yolo_model_path}")
 
-    # Initialize model
-    model = YOLOModel()
-    # Load model state_dict
-    model.load_state_dict(torch.load(yolo_model_path, map_location=torch.device('cpu')))
+    # Load YOLO model
+    yolo_model = torch.hub.load('ultralytics/yolov5', 'custom', path=yolo_model_path)
     
-    return model
+    return yolo_model
